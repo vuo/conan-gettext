@@ -15,8 +15,7 @@ class GettextConan(ConanFile):
         # The .xz and .lz archives are much smaller, but Conan doesn't yet support those archive formats.
         # https://github.com/conan-io/conan/issues/52
         tools.get('https://ftp.gnu.org/pub/gnu/gettext/gettext-%s.tar.gz' % self.version,
-                  # sha256='105556dbc5c3fbbc2aa0edb46d22d055748b6f5c7cd7a8d99f8e7eb84e938be4'
-                  )
+                  sha256='105556dbc5c3fbbc2aa0edb46d22d055748b6f5c7cd7a8d99f8e7eb84e938be4')
 
     def build(self):
         tools.mkdir(self.build_dir)
