@@ -8,6 +8,7 @@ class GettextConan(ConanFile):
     package_version = '3'
     version = '%s-%s' % (source_version, package_version)
 
+    requires = 'llvm/3.3-2@vuo/stable'
     settings = 'os', 'compiler', 'build_type', 'arch'
     url = 'https://github.com/vuo/conan-gettext'
     license = 'https://www.gnu.org/software/gettext/manual/html_node/GNU-LGPL.html'
@@ -28,15 +29,22 @@ class GettextConan(ConanFile):
             autotools.flags.append('-Oz')
             autotools.flags.append('-mmacosx-version-min=10.10')
             autotools.link_flags.append('-Wl,-install_name,@rpath/libintl.dylib')
-            autotools.configure(configure_dir='../%s' % self.source_dir,
-                                args=['--quiet',
-                                      '--disable-c++',
-                                      '--disable-curses',
-                                      '--disable-java',
-                                      '--disable-static',
-                                      '--enable-shared',
-                                      '--prefix=%s' % os.getcwd()])
-            autotools.make(args=['install'])
+
+            env_vars = {
+                'CC' : self.deps_cpp_info['llvm'].rootpath + '/bin/clang',
+                'CXX': self.deps_cpp_info['llvm'].rootpath + '/bin/clang++',
+            }
+
+            with tools.environment_append(env_vars):
+                autotools.configure(configure_dir='../%s' % self.source_dir,
+                                    args=['--quiet',
+                                          '--disable-c++',
+                                          '--disable-curses',
+                                          '--disable-java',
+                                          '--disable-static',
+                                          '--enable-shared',
+                                          '--prefix=%s' % os.getcwd()])
+                autotools.make(args=['install'])
 
     def package(self):
         self.copy('*.h', src='%s/include' % self.build_dir, dst='include')
