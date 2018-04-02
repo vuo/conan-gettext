@@ -5,7 +5,7 @@ class GettextConan(ConanFile):
     name = 'gettext'
 
     source_version = '0.19.8.1'
-    package_version = '2'
+    package_version = '3'
     version = '%s-%s' % (source_version, package_version)
 
     settings = 'os', 'compiler', 'build_type', 'arch'
